@@ -1,21 +1,34 @@
 from key import api
 from google import genai
+from my_promt import *
+import json
 
 client = genai.Client(api_key=api)
 
-video = client.files.upload(file='1.mp4')
+file = client.files.upload(file='1.mp4')
 
-while video.state.name != 'ACTIVE':
-    if video.state.name == "FAILED":
+while file.state.name != 'ACTIVE':
+    if file.state.name == "FAILED":
         raise Exception("Проблєма з завантаженням")
         
-    video = client.files.get(name=video.name)
+    file = client.files.get(name=file.name)
         
+with open('1.json',"r",encoding="utf-8") as f:
+    file1 = json.load(f)
+
+smal = {
+    "duration": file1.get("duration"),
+    "tracks": file1.get("tracks", []),
+    "video_effects": file1["materials"].get("video_effects", []),
+    "transitions": file1["materials"].get("transitions", [])
+}
+
 
 promt = client.models.generate_content(
     model="gemini-2.5-flash",
-    contents=['опиши шо робиться в відео',
-    video
+    contents=[promt1,
+    file,
+    json.dumps(smal)
     ]
 )
 
