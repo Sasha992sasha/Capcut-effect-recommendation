@@ -12,7 +12,9 @@ while file.state.name != 'ACTIVE':
         raise Exception("Проблєма з завантаженням")
         
     file = client.files.get(name=file.name)
-        
+    
+print('Відео завантажене')
+
 with open('1.json',"r",encoding="utf-8") as f:
     file1 = json.load(f)
 
@@ -23,6 +25,7 @@ smal = {
     "transitions": file1["materials"].get("transitions", [])
 }
 
+print('Запитання відправлене')
 
 promt = client.models.generate_content(
     model="gemini-2.5-flash",
